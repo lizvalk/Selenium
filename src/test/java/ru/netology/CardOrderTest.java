@@ -31,4 +31,18 @@ public class CardOrderTest {
         driver.quit();
         driver = null;
     }
+    @Test
+    void shouldCardOrderForm() {
+        driver.get("http://localhost:9999/");
+        List<WebElement> inputs = driver.findElements(By.tagName("input"));
+        inputs.get(0).sendKeys("Валькевич Елизавета");
+        inputs.get(1).sendKeys("+79138119144");
+        driver.findElement(By.className("checkbox__box")).click();
+        driver.findElement(By.className("button__text")).click();
+
+        String expected = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
+        String actual = driver.findElement(By.tagName("p")).getText().trim();
+
+        Assertions.assertEquals(expected, actual);
+    }
 }
