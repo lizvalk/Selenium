@@ -45,4 +45,17 @@ public class CardOrderTest {
 
         Assertions.assertEquals(expected, actual);
     }
+    @Test
+    void shouldCardOrderFormUseSelectors() {
+        driver.get("http://localhost:9999/");
+        driver.findElement(By.cssSelector("[data-test-id = name] input")).sendKeys("Валькевич Елизавета");
+        driver.findElement(By.cssSelector("[data-test-id = phone] input")).sendKeys("+79138119144");
+        driver.findElement(By.cssSelector("[data-test-id = agreement] span")).click();
+        driver.findElement(By.className("button__text")).click();
+
+        String expected = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
+        String actual = driver.findElement(By.tagName("p")).getText().trim();
+
+        Assertions.assertEquals(expected, actual);
+    }
 }
