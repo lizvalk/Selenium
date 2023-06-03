@@ -54,7 +54,33 @@ public class CardOrderTest {
         driver.findElement(By.className("button__text")).click();
 
         String expected = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
-        String actual = driver.findElement(By.tagName("p")).getText().trim();
+        String actual = driver.findElement(By.cssSelector("[data-test-id = order-success]")).getText().trim();
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void shouldFailIfNameFilledInLatinLetters() {
+        driver.get("http://localhost:9999/");
+        driver.findElement(By.cssSelector("[data-test-id = name] input")).sendKeys("Valkevich Elizaveta");
+        driver.findElement(By.cssSelector("[data-test-id = phone] input")).sendKeys("+7913");
+        driver.findElement(By.cssSelector("[data-test-id = agreement] span")).click();
+        driver.findElement(By.className("button__text")).click();
+
+        String expected = "Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.";
+        String actual = driver.findElement(By.cssSelector("span.input_invalid span.input__sub")).getText().trim();
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void lessThan11DigitsInThePhoneField() {
+        driver.get("http://localhost:9999/");
+        driver.findElement(By.cssSelector("[data-test-id = name] input")).sendKeys("Валькевич Елизавета");
+        driver.findElement(By.cssSelector("[data-test-id = phone] input")).sendKeys("+7913");
+        driver.findElement(By.cssSelector("[data-test-id = agreement] span")).click();
+        driver.findElement(By.className("button__text")).click();
+
+        String expected = "Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.";
+        String actual = driver.findElement(By.cssSelector("span.input_invalid span.input__sub")).getText().trim();
 
         Assertions.assertEquals(expected, actual);
     }
